@@ -1,6 +1,6 @@
 ---
 name: review
-description: Verification loop — Design Doc compliance validation with doc sync and anti-pattern checks
+description: Verification loop  - Design Doc compliance validation with doc sync and anti-pattern checks
 ---
 
 **Command Context**: Post-implementation quality assurance — the VERIFICATION LOOP

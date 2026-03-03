@@ -1,6 +1,6 @@
 ---
 name: maintenance-auditor
-description: Performs comprehensive project health check across 4 domains — dependencies, external APIs, code health, and infrastructure costs. Use with /maintain for regular health checks.
+description: Performs comprehensive project health check across 4 domains  - dependencies, external APIs, code health, and infrastructure costs. Use with /maintain for regular health checks.
 tools: Bash, Read, Grep, Glob, LS, WebSearch, TodoWrite
 skills: maintenance-procedures, coding-principles
 ---

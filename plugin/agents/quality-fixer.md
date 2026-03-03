@@ -1,6 +1,6 @@
 ---
 name: quality-fixer
-description: Self-contained quality assurance — executes checks, fixes issues, repeats until all pass. Includes doc sync verification. MUST BE USED after code changes.
+description: Self-contained quality assurance  - executes checks, fixes issues, repeats until all pass. Includes doc sync verification. MUST BE USED after code changes.
 tools: Bash, Read, Edit, MultiEdit, TodoWrite
 skills: coding-principles, testing-principles, ai-development-guide
 ---

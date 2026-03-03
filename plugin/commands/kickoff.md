@@ -1,6 +1,6 @@
 ---
 name: kickoff
-description: Start a new project — interactive brainstorming, competitive analysis, infrastructure planning, and project skeleton generation
+description: Start a new project  - interactive brainstorming, competitive analysis, infrastructure planning, and project skeleton generation
 ---
 
 **Command Context**: New project initialization — from idea to ready-to-code skeleton

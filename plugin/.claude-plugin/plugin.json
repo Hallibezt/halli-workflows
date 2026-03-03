@@ -1,10 +1,13 @@
 {
   "name": "halli-workflows",
   "version": "1.0.0",
-  "description": "Full-lifecycle development workflows — from project kickoff and brainstorming through design, implementation, and ongoing maintenance. 23 specialized agents, 15 skills, stack-aware presets.",
+  "description": "Full-lifecycle development workflows with 23 specialized agents, 15 skills, and stack-aware presets. Commands: kickoff, implement, design, plan, build, task, review, diagnose, maintain, retro, guide.",
   "author": {
-    "name": "Halli"
+    "name": "Halli",
+    "url": "https://github.com/Hallibezt"
   },
+  "homepage": "https://github.com/Hallibezt/halli-workflows",
+  "repository": "https://github.com/Hallibezt/halli-workflows.git",
   "license": "MIT",
   "keywords": [
     "workflows",
@@ -14,11 +17,7 @@
     "retrospective",
     "sub-agents",
     "quality",
-    "development",
-    "full-stack",
-    "mobile",
-    "api",
-    "infrastructure-planning"
+    "development"
   ],
   "commands": [
     "./commands/kickoff.md",

@@ -1,6 +1,6 @@
 ---
 name: guide
-description: Workflow navigator — ask about commands, get recommendations for your task, learn how to extend the workflow
+description: Workflow navigator  - ask about commands, get recommendations for your task, learn how to extend the workflow
 ---
 
 **Command Context**: Meta-command for understanding and navigating the halli-dev-workflows system
