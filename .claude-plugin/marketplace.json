@@ -1,0 +1,18 @@
+{
+  "name": "halli-dev-workflows",
+  "version": "1.0.0",
+  "owner": {
+    "name": "Halli",
+    "url": "https://github.com/halli"
+  },
+  "metadata": {
+    "description": "Personal engineering operating system — full project lifecycle from brainstorming to maintenance. Tailored for solo/small-team development with Claude Code."
+  },
+  "plugins": [
+    {
+      "name": "halli-workflows",
+      "source": ".",
+      "description": "Full-lifecycle development workflows: kickoff brainstorming, design, plan, implement, review, diagnose, maintain, retro. 23 specialized agents, 15 skills, stack-aware with presets for Next.js, Expo, Hono, and more."
+    }
+  ]
+}
