@@ -1,0 +1,63 @@
+{
+  "name": "halli-workflows",
+  "version": "1.0.0",
+  "description": "Full-lifecycle development workflows — from project kickoff and brainstorming through design, implementation, and ongoing maintenance. 23 specialized agents, 15 skills, stack-aware presets.",
+  "author": {
+    "name": "Halli"
+  },
+  "license": "MIT",
+  "keywords": [
+    "workflows",
+    "kickoff",
+    "brainstorming",
+    "maintenance",
+    "retrospective",
+    "sub-agents",
+    "quality",
+    "development",
+    "full-stack",
+    "mobile",
+    "api",
+    "infrastructure-planning"
+  ],
+  "commands": [
+    "./commands/kickoff.md",
+    "./commands/maintain.md",
+    "./commands/retro.md",
+    "./commands/guide.md",
+    "./commands/implement.md",
+    "./commands/design.md",
+    "./commands/plan.md",
+    "./commands/build.md",
+    "./commands/task.md",
+    "./commands/review.md",
+    "./commands/diagnose.md",
+    "./commands/reverse-engineer.md",
+    "./commands/add-integration-tests.md"
+  ],
+  "agents": [
+    "./agents/brainstorm-facilitator.md",
+    "./agents/project-bootstrapper.md",
+    "./agents/infra-planner.md",
+    "./agents/maintenance-auditor.md",
+    "./agents/retro-analyzer.md",
+    "./agents/workflow-guide.md",
+    "./agents/investigator.md",
+    "./agents/verifier.md",
+    "./agents/solver.md",
+    "./agents/requirement-analyzer.md",
+    "./agents/prd-creator.md",
+    "./agents/technical-designer.md",
+    "./agents/work-planner.md",
+    "./agents/task-executor.md",
+    "./agents/task-decomposer.md",
+    "./agents/code-reviewer.md",
+    "./agents/code-verifier.md",
+    "./agents/document-reviewer.md",
+    "./agents/design-sync.md",
+    "./agents/acceptance-test-generator.md",
+    "./agents/quality-fixer.md",
+    "./agents/rule-advisor.md",
+    "./agents/scope-discoverer.md"
+  ]
+}

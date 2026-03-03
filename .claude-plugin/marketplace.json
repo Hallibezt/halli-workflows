@@ -1,5 +1,5 @@
 {
-  "name": "halli-dev-workflows",
+  "name": "halli-workflows",
   "version": "1.0.0",
   "owner": {
     "name": "Halli",
@@ -11,7 +11,7 @@
   "plugins": [
     {
       "name": "halli-workflows",
-      "source": ".",
+      "source": "./plugin",
       "description": "Full-lifecycle development workflows: kickoff brainstorming, design, plan, implement, review, diagnose, maintain, retro. 23 specialized agents, 15 skills, stack-aware with presets for Next.js, Expo, Hono, and more."
     }
   ]
