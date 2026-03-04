@@ -108,14 +108,27 @@ Stop autonomous execution if:
 2. Requirement change detected in user message
 3. User explicitly stops
 
+## Sub-Phase Awareness
+
+This build command executes tasks for **one sub-phase** (or one full phase if no decomposition was needed).
+
+After build completes:
+- If more sub-phases remain: suggest `Run /plan for the next sub-phase`
+- If all sub-phases complete: suggest `/review` or `/retro`
+
 ## Completion Report
 
 ```
 Build complete.
+- Sub-phase: [name] (or "full phase")
 - Tasks implemented: [N] / [total]
 - Quality checks: All passed
 - Commits: [N]
 - Verification: [compliance]%
 - Doc sync: [completed / items updated]
-- Build testing: [appended to build-testing.md / not merge point]
+- Build testing: [appended to build-testing.md]
+
+[If more sub-phases remain]:
+Next sub-phase: [name]
+Run /plan to plan the next sub-phase, then /build to execute.
 ```

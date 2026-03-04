@@ -48,6 +48,7 @@ User → /command → Orchestrator → Agent(s) → [Stop Points] → Complete
 ### Core Principles
 
 - **Orchestrator pattern**: Commands never do work directly. They coordinate agents.
+- **Sub-phase decomposition**: Large phases (>15 items, >2 sprints) MUST be broken into sub-phases of 5-15 tasks. Each sub-phase goes through the full plan → build → test cycle independently. Think small independent groups that work together, not monoliths.
 - **Verification loop**: Agent 1 implements → Agent 2 verifies → fix if needed.
 - **Doc sync**: Every completion updates roadmap, backlog, task files.
 - **Build testing**: Manual testing checklist before every merge.

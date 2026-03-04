@@ -69,9 +69,28 @@ If requirement-analyzer flags architecture changes:
 2. **Invoke document-reviewer** — review ADR
 3. **[Stop: Approve ADR]**
 
-### Step 4: Design Document
+### Step 4: Sub-Phase Decomposition Check
+
+Before creating the design doc, check if the scope requires sub-phase decomposition (see subagents-orchestration-guide):
+
+| Indicator | Threshold | Action |
+|-----------|-----------|--------|
+| Backlog items | >15 items | MUST decompose |
+| Sprint count | >2 sprints | MUST decompose |
+| File count | >20 files | MUST decompose |
+| Mixed concerns | Auth + UI + API + infra | MUST decompose |
+
+If thresholds are exceeded:
+1. **Propose sub-phases** — named groups of 5-15 tasks with clear boundaries
+2. **Each sub-phase must produce independently testable functionality**
+3. **[Stop: User approves sub-phase breakdown]**
+4. The design doc should be structured with sub-phase sections, but covers the full phase for architectural coherence
+
+### Step 5: Design Document
 
 1. **Invoke technical-designer** — create Design Doc (stack-aware, references CLAUDE.md patterns)
+   - If sub-phases were identified, structure the doc with clear sub-phase sections
+   - Keep the doc focused — aim for <1500 lines. If larger, split into sub-phase design docs
 2. **Invoke document-reviewer** — review Design Doc quality
 3. **Invoke design-sync** — verify consistency with existing docs
 4. **[Stop: Approve Design Doc]**
@@ -86,16 +105,18 @@ If requirement-analyzer flags architecture changes:
 ```
 Design phase completed.
 - Design document: docs/design/[name].md
+- Sub-phases: [N sub-phases identified, or "single phase — no decomposition needed"]
 - ADR: docs/adr/[name].md (if created)
 - PRD: docs/prd/[name].md (if created)
 - Approval status: User approved
 
-Next: Run /plan to create work plan, or /implement to go end-to-end.
+Next: Run /plan to create work plan for [first sub-phase / the phase].
 ```
 
 ## Completion Criteria
 
 - [ ] requirement-analyzer executed, scale determined
+- [ ] Sub-phase decomposition checked (mandatory if thresholds exceeded)
 - [ ] Appropriate design documents created (ADR/Design Doc)
 - [ ] document-reviewer verified each document
 - [ ] design-sync confirmed consistency

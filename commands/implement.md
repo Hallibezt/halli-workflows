@@ -67,16 +67,30 @@ Check CLAUDE.md for project's ambition tier. This affects the flow:
 
 **[Stop: Review requirements, confirm scope and scale]**
 
+### 3.5. Sub-Phase Decomposition Check
+
+After requirements are confirmed, check if the scope exceeds sub-phase thresholds (see subagents-orchestration-guide):
+- >15 backlog items, >2 sprints, >20 files, or mixed concerns → **MUST decompose**
+
+If decomposition needed:
+1. Propose sub-phases (5-15 tasks each, named, with clear boundaries)
+2. **[Stop: User approves sub-phase breakdown]**
+3. Design covers full phase, but plan/build cycle runs per sub-phase
+
 ### 4. Scale-Based Flow
 
 Follow subagents-orchestration-guide for the determined scale:
 
 #### Large Scale (6+ Files)
 1. requirement-analyzer **[Stop: Confirm]**
-2. prd-creator → document-reviewer **[Stop: Approve PRD]**
-3. technical-designer → document-reviewer → design-sync **[Stop: Approve Design]**
-4. acceptance-test-generator → work-planner **[Stop: Approve Plan]**
-5. **Autonomous execution mode**
+2. Sub-phase decomposition check **[Stop: Approve breakdown, if needed]**
+3. prd-creator → document-reviewer **[Stop: Approve PRD]**
+4. technical-designer → document-reviewer → design-sync **[Stop: Approve Design]**
+5. **For each sub-phase**:
+   a. acceptance-test-generator → work-planner **[Stop: Approve Plan]**
+   b. **Autonomous execution mode**
+   c. Post-build verification + doc sync
+   d. **[Stop: Sub-phase complete, proceed to next?]**
 
 #### Medium Scale (3-5 Files)
 1. requirement-analyzer **[Stop: Confirm]**
