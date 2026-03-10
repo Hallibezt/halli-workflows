@@ -27,6 +27,15 @@ Read task file. Understand:
 - Testing requirements
 - Domain rules (from CLAUDE.md Context Router)
 
+### Step 1.5: Research-First Gate (MANDATORY)
+
+Before writing any code that calls external APIs, libraries, hardware protocols, or database features:
+1. **Verify** the API/method/function exists by reading real docs, source code, or OpenAPI specs.
+2. **Check versions** — confirm the installed package version actually exports the symbols you plan to use.
+3. **If unverifiable**, warn the user with `[UNVERIFIED]` markers and do NOT proceed silently.
+4. **Never invent** request/response shapes, mock data, or type definitions based on assumptions.
+See `ai-development-guide` skill → "HALLUCINATION PREVENTION" section for complete rules.
+
 ### Step 2: Implement
 
 Follow project coding standards from CLAUDE.md:
@@ -74,3 +83,7 @@ Return `escalation_needed` when:
 - Violating CLAUDE.md rules or anti-patterns
 - Modifying files outside task scope without noting it
 - Ignoring domain CLAUDE.md patterns
+- **Using `as any`, `@ts-ignore`, `# type: ignore`, or empty catch blocks to make code compile**
+- **Inventing API response shapes, library methods, or database fields without verification**
+- **Fixing build/test failures by adding compensating fictions instead of addressing root causes**
+- **Generating test mocks based on assumed (not verified) API responses**
