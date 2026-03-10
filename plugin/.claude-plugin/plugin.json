@@ -1,7 +1,7 @@
 {
   "name": "halli-workflows",
   "version": "1.0.0",
-  "description": "Full-lifecycle development workflows with 23 specialized agents, 15 skills, and stack-aware presets. Commands: kickoff, implement, design, plan, build, task, review, diagnose, maintain, retro, guide.",
+  "description": "Full-lifecycle development workflows with 24 specialized agents, 16 skills, and stack-aware presets. Commands: kickoff, implement, design, plan, build, task, review, diagnose, maintain, retro, guide, think.",
   "author": {
     "name": "Halli",
     "url": "https://github.com/Hallibezt"
@@ -32,7 +32,9 @@
     "./commands/review.md",
     "./commands/diagnose.md",
     "./commands/reverse-engineer.md",
-    "./commands/add-integration-tests.md"
+    "./commands/add-integration-tests.md",
+    "./commands/think.md",
+    "./commands/audit.md"
   ],
   "agents": [
     "./agents/brainstorm-facilitator.md",
@@ -57,6 +59,8 @@
     "./agents/acceptance-test-generator.md",
     "./agents/quality-fixer.md",
     "./agents/rule-advisor.md",
-    "./agents/scope-discoverer.md"
+    "./agents/scope-discoverer.md",
+    "./agents/thinking-partner.md",
+    "./agents/codebase-auditor.md"
   ]
 }
