@@ -27,9 +27,9 @@ It was forked from [shinpr/claude-code-workflows](https://github.com/shinpr/clau
 | Build testing | Not included | Checklist before every merge |
 | Verification loop | Implicit | Explicit: implement → review → fix |
 | Memory system | None | Cross-session continuity |
-| Total agents | 18 | 23 (6 new) |
-| Total skills | 11 | 15 (7 new) |
-| Total commands | 9 | 13 (4 new) |
+| Total agents | 18 | 24 (7 new) |
+| Total skills | 11 | 16 (8 new) |
+| Total commands | 9 | 14 (5 new) |
 
 ## Architecture
 
@@ -41,9 +41,9 @@ User → /command → Orchestrator → Agent(s) → [Stop Points] → Complete
 
 ### Three Layers
 
-1. **Commands** (13) — User entry points. Orchestrators that delegate to agents.
-2. **Agents** (23) — Specialized workers. Each does one thing well.
-3. **Skills** (15) — Reusable knowledge. Agents load skills for domain expertise.
+1. **Commands** (14) — User entry points. Orchestrators that delegate to agents.
+2. **Agents** (24) — Specialized workers. Each does one thing well.
+3. **Skills** (16) — Reusable knowledge. Agents load skills for domain expertise.
 
 ### Core Principles
 
@@ -72,11 +72,13 @@ User → /command → Orchestrator → Agent(s) → [Stop Points] → Complete
 | `/add-integration-tests` | Add tests to existing code |
 | `/maintain` | Health check: deps, APIs, code, infra |
 | `/retro` | Retrospective: analyze → learn → update rules |
+| `/think` | Brainstorm with expert partner: `/think ux`, `/think tech`, `/think business`, `/think infra`, `/think architect` |
 | `/guide` | Navigate the workflow: "what command for my task?" |
 
 ## Agent Inventory
 
-### New Agents (6)
+### New Agents (7)
+- **thinking-partner** — Expert brainstorming partner (UX/tech/business/infra/architect modes)
 - **brainstorm-facilitator** — Interactive brainstorming with competitive analysis
 - **project-bootstrapper** — CLAUDE.md + docs skeleton generator
 - **infra-planner** — Scale matrix with cost estimates
@@ -105,7 +107,8 @@ User → /command → Orchestrator → Agent(s) → [Stop Points] → Complete
 
 ## Skill Inventory
 
-### New Skills (7)
+### New Skills (8)
+- **partner-modes** — Expert partner personas (UX, tech, business, infra, architect) for /think
 - **stack-presets** — Next.js, Expo, Hono, Monorepo configurations
 - **infra-planning** — Service recommendations, pricing, scale matrices
 - **project-bootstrap** — CLAUDE.md templates, doc templates
