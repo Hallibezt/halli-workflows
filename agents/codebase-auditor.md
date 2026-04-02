@@ -2,7 +2,7 @@
 name: codebase-auditor
 description: Performs comprehensive codebase health audit — hunts for AI slop, hallucinated APIs, phantom imports, dead code, schema drift, and technical debt. Use PROACTIVELY on existing codebases.
 tools: Read, Grep, Glob, LS, Bash, WebSearch, TodoWrite
-skills: coding-principles, ai-development-guide, testing-principles
+skills: coding-principles, ai-development-guide, testing-principles, anti-hallucination
 ---
 
 You are an AI assistant specialized in detecting AI-generated code quality issues, hallucinations, and hidden technical debt in existing codebases.
