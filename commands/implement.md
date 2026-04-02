@@ -15,9 +15,11 @@ description: Orchestrate the complete implementation lifecycle from requirements
 3. **Follow subagents-orchestration-guide skill flows exactly**
 4. **Stop at every `[Stop: ...]` marker** — wait for user approval
 5. **Enter autonomous mode** only after batch approval for implementation phase
-6. **Doc sync after completion** — update roadmap, backlog, task files (NON-NEGOTIABLE)
+6. **Phase-aware execution** — loop per phase, not per task list
+7. **Phase gate after each phase** — light review before proceeding
+8. **Backlog updates are automatic** — status transitions happen during execution, not at the end
 
-**CRITICAL**: Execute all steps, sub-agents, and stopping points defined in flows. After completion, ALWAYS update docs.
+**CRITICAL**: Execute all steps, sub-agents, and stopping points defined in flows. Backlog and doc sync happen continuously, not just at the end.
 
 ## Pre-Flight: Project Context
 
@@ -29,6 +31,8 @@ Before any work:
 ! git log --oneline -10
 # Check roadmap
 ! ls docs/plans/product-roadmap.md 2>/dev/null
+# Check for existing phase manifest
+! cat docs/plans/tasks/_phase-manifest.md 2>/dev/null
 ```
 
 Load relevant domain CLAUDE.md files per Context Router.
@@ -44,7 +48,7 @@ Instruction Content: $ARGUMENTS
 | Situation | Criteria | Next Action |
 |-----------|----------|-------------|
 | New Requirements | No existing work, new feature/fix request | Start with requirement-analyzer |
-| Flow Continuation | Existing docs/tasks, continuation directive | Identify next step in flow |
+| Flow Continuation | Existing docs/tasks, continuation directive | Read phase manifest, identify next phase |
 | Quality Errors | Error detection, test failures, build errors | Execute quality-fixer |
 | Ambiguous | Intent unclear | Confirm with user |
 
@@ -75,55 +79,135 @@ Follow subagents-orchestration-guide for the determined scale:
 1. requirement-analyzer **[Stop: Confirm]**
 2. prd-creator → document-reviewer **[Stop: Approve PRD]**
 3. technical-designer → document-reviewer → design-sync **[Stop: Approve Design]**
-4. acceptance-test-generator → work-planner **[Stop: Approve Plan]**
-5. **Autonomous execution mode**
+4. acceptance-test-generator → work-planner **[Stop: Approve Plan + Phase Manifest]**
+5. **Phase-aware execution** (see §6 below)
 
 #### Medium Scale (3-5 Files)
 1. requirement-analyzer **[Stop: Confirm]**
 2. technical-designer → document-reviewer → design-sync **[Stop: Approve Design]**
-3. acceptance-test-generator → work-planner **[Stop: Approve Plan]**
-4. **Autonomous execution mode**
+3. acceptance-test-generator → work-planner **[Stop: Approve Plan + Phase Manifest]**
+4. **Phase-aware execution** (see §6 below)
 
 #### Small Scale (1-2 Files)
 1. Simplified plan **[Stop: Approve]**
-2. **Direct implementation**
+2. **Direct implementation** (single phase, no manifest needed)
 
 ### 5. Register All Flow Steps to TodoWrite (MANDATORY)
 
 After scale determination, register all steps as TodoWrite items.
 
-### 6. Autonomous Execution: 4-Step Cycle
+### 6. Phase-Aware Execution Loop
 
-For EACH task:
+**This is the core execution engine.** Read the phase manifest and loop per phase.
+
 ```
-1. task-executor → Implementation
-2. Escalation check → Verify task-executor status
-3. quality-fixer → Quality check and fixes
-4. git commit → On approved: true
+for each phase in _phase-manifest.md:
+
+  ┌─ PHASE START ──────────────────────────────────┐
+  │                                                 │
+  │  1. Update backlog: phase items → IN PROGRESS   │
+  │                                                 │
+  │  2. For each task in this phase:                │
+  │     a. task-executor → implement                │
+  │     b. escalation check                         │
+  │     c. quality-fixer → quality check            │
+  │     d. git commit (if approved: true)           │
+  │     e. mark task file steps [x]                 │
+  │                                                 │
+  │  3. Phase Gate (light review)                   │
+  │     → code-reviewer in phase-gate mode          │
+  │     → check ONLY this phase's acceptance gate   │
+  │     → from the manifest                         │
+  │                                                 │
+  │  4. Update backlog: phase items → IN REVIEW     │
+  │                                                 │
+  │  5. [Stop: Present phase gate results]          │
+  │     Show:                                       │
+  │     - Phase gate compliance score               │
+  │     - Gaps found (if any)                       │
+  │     - Edge cases the design didn't catch        │
+  │     - Backlog items now IN REVIEW               │
+  │                                                 │
+  │  6. User confirms → mark DONE (date)            │
+  │     OR flags issues → fix loop before next phase│
+  │                                                 │
+  └─────────────────────────────────────────────────┘
 ```
 
 **Rules**:
-- ONE task at a time, fully complete before next
+- ONE task at a time within a phase, fully complete before next
 - quality-fixer MUST run after each task-executor
 - Commit when quality-fixer returns `approved: true`
+- Phase gate runs AFTER all tasks in the phase pass quality checks
+- NEVER proceed to the next phase without user confirmation at the stop point
+- If user flags issues at the phase gate, create fix tasks and execute them before proceeding
+
+### Phase Gate Invocation
+
+```
+subagent_type: code-reviewer
+prompt: |
+  MODE: phase-gate (light review — NOT full compliance audit)
+
+  Phase: [N] — [Phase Name]
+  Design Doc: [path]
+  Acceptance gate criteria: [from manifest]
+  Tasks completed: [list]
+  Files modified: [list from task-executor outputs]
+
+  Check ONLY:
+  1. Are this phase's acceptance gate criteria met?
+  2. Any obvious gaps between design doc and implementation?
+  3. Edge cases the design didn't address that the implementation reveals?
+  4. Any anti-pattern violations in the modified files?
+
+  Do NOT check: doc sync, build testing, full roadmap compliance (those happen at the end).
+
+  Return a focused report: pass/fail, gaps found, edge cases discovered.
+```
 
 ### 7. Post-Implementation Verification (MANDATORY)
 
-After all tasks complete:
-1. **Invoke code-reviewer** — verify Design Doc compliance
+After ALL phases complete:
+1. **Invoke code-reviewer** in full mode — verify complete Design Doc compliance
 2. **Report findings to user** — show compliance score and issues
 3. **Ask user**: "Should we address these issues?" → If yes, loop back to fix
 
-This is the **verification loop** — the implementing agent is blind to its own gaps. The review agent catches them.
+This is the **full verification loop** — catches anything the phase gates missed.
 
 ### 8. Doc Sync (NON-NEGOTIABLE)
 
 After implementation is approved:
 - [ ] Update `docs/plans/product-roadmap.md` — check off completed items
-- [ ] Update `docs/plans/backlog.md` — mark resolved items
+- [ ] Update backlog — all items should already be `DONE (date)` from phase gates
+- [ ] Verify backlog consistency — no items stuck in `IN PROGRESS` or `IN REVIEW`
 - [ ] Update task files — check off completed steps
 - [ ] Update CLAUDE.md "Current State" if significant change
 - [ ] Append build-testing.md section if this is a merge point
+
+### 9. Cleanup Phase Manifest
+
+After all work is complete:
+- Add completion date to `_phase-manifest.md`
+- Mark all phases as complete
+- This manifest becomes the historical record of this implementation
+
+## Backlog Status Transitions
+
+The implement command manages these transitions automatically:
+
+```
+TODO ──── phase starts ────→ IN PROGRESS
+IN PROGRESS ── phase gate passes ──→ IN REVIEW
+IN REVIEW ──── user confirms ────→ DONE (date)
+```
+
+**Format**: Use exactly `TODO | IN PROGRESS | IN REVIEW | DONE (date)` in backlog files.
+No emoji, no strikethrough. Machine-readable.
+
+**Where to update**: Find backlog items by cross-referencing the phase manifest's
+"Backlog items" field with the project's backlog file(s). Check CLAUDE.md for
+which backlog files exist (some projects have multiple — update ALL relevant ones).
 
 ## CRITICAL Sub-agent Invocation Constraints
 
@@ -140,11 +224,13 @@ Ambition: [MVP/Production/Enterprise]
 ```
 Implementation complete.
 - Scale: [small/medium/large]
+- Phases completed: [N]
 - Tasks implemented: [N]
 - Quality checks: All passed
-- Verification: [compliance score]%
+- Phase gates: All passed
+- Final verification: [compliance score]%
+- Backlog: All items → DONE
 - Docs updated: roadmap, backlog, task files
-- Build testing: [appended / not needed]
 
 Next: Run /review for deep verification, or /retro for retrospective.
 ```
