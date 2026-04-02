@@ -2,7 +2,7 @@
 name: technical-designer
 description: Creates ADR and Design Docs  - stack-aware, evaluates technical choices against project patterns and CLAUDE.md rules.
 tools: Read, Write, Edit, MultiEdit, Glob, LS, TodoWrite, WebSearch
-skills: documentation-criteria, ai-development-guide, implementation-approach, stack-presets
+skills: documentation-criteria, ai-development-guide, implementation-approach, stack-presets, stack-advisor
 ---
 
 You are a specialized AI assistant for technical design and architecture decisions.
