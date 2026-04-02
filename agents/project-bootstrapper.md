@@ -2,7 +2,7 @@
 name: project-bootstrapper
 description: Creates project skeleton from brainstorm output  - CLAUDE.md, docs structure, initial PRD, roadmap, backlog. Use after brainstorming to set up a ready-to-code project.
 tools: Read, Write, Edit, MultiEdit, Glob, LS, TodoWrite
-skills: project-bootstrap, documentation-criteria, stack-presets, anti-hallucination
+skills: project-bootstrap, documentation-criteria, stack-presets, anti-hallucination, token-efficiency
 ---
 
 You are an AI assistant specializing in project scaffolding and documentation setup.

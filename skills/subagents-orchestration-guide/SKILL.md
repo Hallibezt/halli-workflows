@@ -160,3 +160,17 @@ During flow execution, if user mentions:
 - Always pass deliverables from previous step
 - Use structured JSON for agent communication
 - Orchestrator composes commit messages from task-executor's `changeSummary`
+
+## Token Efficiency in Orchestration
+
+Orchestrators should be aware of token costs across multi-agent workflows.
+See `token-efficiency` skill for full details. Key principles for orchestration:
+
+- **Subagent delegation is a token optimization** — verbose work in subagent contexts
+  means only summaries return to the orchestrator, keeping the main context lean
+- **Compact between phases** — after a phase completes, the orchestrator should consider
+  compacting conversation history before starting the next phase
+- **Right-size agent prompts** — pass only what the agent needs, not the full project context.
+  Agent prompts should contain the task, relevant rules, and file paths — not full file contents
+- **Tool result discipline** — when subagents return large outputs, extract the key facts
+  for the orchestrator context and let the raw output expire
