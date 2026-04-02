@@ -35,7 +35,8 @@
     "./commands/reverse-engineer.md",
     "./commands/add-integration-tests.md",
     "./commands/think.md",
-    "./commands/audit.md"
+    "./commands/audit.md",
+    "./commands/verify-claims.md"
   ],
   "agents": [
     "./agents/brainstorm-facilitator.md",
@@ -62,6 +63,7 @@
     "./agents/rule-advisor.md",
     "./agents/scope-discoverer.md",
     "./agents/thinking-partner.md",
-    "./agents/codebase-auditor.md"
+    "./agents/codebase-auditor.md",
+    "./agents/ground-truth-verifier.md"
   ]
 }

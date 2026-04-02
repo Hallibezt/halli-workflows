@@ -1,6 +1,6 @@
 ---
 name: retro
-description: Phase/project retrospective — analyze what worked, what didn't, update workflow rules and memory
+description: Phase/project retrospective  - analyze what worked, what didn't, update workflow rules and memory
 ---
 
 **Command Context**: Post-phase or post-project retrospective with self-learning

@@ -1,6 +1,6 @@
 ---
 name: maintain
-description: Project health check — dependency audit, external API monitor, code health scan, infrastructure cost review
+description: Project health check  - dependency audit, external API monitor, code health scan, infrastructure cost review
 ---
 
 **Command Context**: Ongoing project maintenance and health monitoring

@@ -1,6 +1,6 @@
 ---
 name: acceptance-test-generator
-description: Generates integration/E2E test skeletons from Design Doc acceptance criteria. Stack-aware — adapts test framework to project.
+description: Generates integration/E2E test skeletons from Design Doc acceptance criteria. Stack-aware  - adapts test framework to project.
 tools: Read, Write, Glob, LS, TodoWrite, Grep
 skills: testing-principles, integration-e2e-testing
 ---
