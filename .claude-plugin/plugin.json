@@ -36,7 +36,8 @@
     "./commands/add-integration-tests.md",
     "./commands/think.md",
     "./commands/audit.md",
-    "./commands/verify-claims.md"
+    "./commands/verify-claims.md",
+    "./commands/workflow-edit.md"
   ],
   "agents": [
     "./agents/brainstorm-facilitator.md",
