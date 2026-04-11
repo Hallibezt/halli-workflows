@@ -95,6 +95,21 @@ Based on stack preset, create context router target files:
 
 List all environment variables from infrastructure plan with placeholder values.
 
+### Step 5b: Install git worktree helpers (MANDATORY for every project)
+
+Copy from the scaffold at `references/worktree-scaffold/` in the project-bootstrap skill:
+
+```
+scripts/worktree-add.sh
+scripts/worktree-remove.sh
+```
+
+Both must be `chmod +x`. Both are stack-agnostic — no customization needed per project.
+
+The `claude-md-template.md` already contains the corresponding "Multi-session workflow" section. Keep it in every generated CLAUDE.md regardless of stack or ambition tier — `git worktree` applies universally and the race condition it solves is architectural in git itself, not stack-specific.
+
+No user prompt needed — install unconditionally.
+
 ### Step 6: Install the Deployment Integrity Gate (MANDATORY for DB-backed projects)
 
 If the project's stack includes a managed database (Supabase, Neon, Railway Postgres, PlanetScale, etc.), install the drift gate. See `project-bootstrap` skill → "Deployment Integrity Gate Scaffold" for full rationale and file list.
@@ -194,6 +209,7 @@ Full runbook: docs/drift-gate.md
 - [ ] Domain CLAUDE.md files for stack
 - [ ] .env.example with all env vars
 - [ ] **Drift gate installed** (if DB-backed) — scripts/drift-check.ts, .githooks/pre-push, .github/workflows/drift-check.yml, docs/drift-gate.md, package.json updates, manual setup instructions printed
+- [ ] **Worktree helpers installed** (always) — scripts/worktree-add.sh, scripts/worktree-remove.sh, chmod +x, CLAUDE.md Multi-session workflow section present
 
 ## Prohibited Actions
 

@@ -96,6 +96,28 @@
 - One logical change per commit
 - Never commit secrets
 
+### Multi-session workflow (use git worktree for concurrent Claude Code sessions)
+
+When running **multiple Claude Code terminals on this repo at the same time**, use `git worktree` — NOT multiple terminal tabs in the same directory. Git branches are per-working-directory, not per-terminal, so `git checkout` in one tab silently switches HEAD in every other tab pointing at the same working directory. A Claude session in tab A can commit to the wrong branch because tab B switched HEAD.
+
+**To start a new concurrent session on a different branch:**
+
+```bash
+scripts/worktree-add.sh feature/T-your-thing
+# Open a new terminal, cd into the printed path, run `claude`
+```
+
+The script creates a new worktree at `../{{PROJECT_NAME}}-T-your-thing` with:
+- Its own isolated branch checkout (git enforces that the same branch cannot be checked out in two worktrees at once)
+- Copies of all `.env.local` files (untracked, would NOT be in a vanilla worktree)
+- Its own `node_modules` (fresh `npm install`)
+
+**Flags:** `--base=<branch>` (base from elsewhere), `--move` (also move uncommitted changes), `--no-install` (skip npm install).
+
+**When done:** `scripts/worktree-remove.sh <worktree-dir>` — refuses to remove if there's uncommitted work or unmerged commits, unless `--force`.
+
+**List active worktrees:** `scripts/worktree-remove.sh --list` or `git worktree list`.
+
 ---
 
 ## Keeping Docs In Sync (NON-NEGOTIABLE)

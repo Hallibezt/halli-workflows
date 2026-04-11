@@ -54,12 +54,13 @@ These rules must be baked into EVERY CLAUDE.md:
 ## Reference Templates
 
 See the `references/` directory for fill-in-the-blank templates:
-- `claude-md-template.md` — CLAUDE.md skeleton (includes Rule 14 drift-gate rule)
+- `claude-md-template.md` — CLAUDE.md skeleton (includes Rule 14 drift-gate rule + Multi-session workflow section)
 - `roadmap-template.md` — Product roadmap
 - `backlog-template.md` — Backlog
 - `build-testing-template.md` — Build testing checklist
 - `infrastructure-template.md` — Infrastructure doc
 - `drift-gate-scaffold/` — complete drift-gate installation (see below)
+- `worktree-scaffold/` — git worktree helpers for concurrent Claude sessions (see below)
 
 ---
 
@@ -141,4 +142,33 @@ During project skeleton generation, the project-bootstrapper agent should ask:
 > "Does this project use a managed database (Supabase, Neon, PlanetScale, etc.)? If yes, I'll install the deployment integrity gate automatically — this is the defense against 'I ran the migration' verbal promises that don't match production. If no, I'll skip it and note in CLAUDE.md."
 
 Default: YES unless the user explicitly says no.
+
+---
+
+## Git Worktree Helpers Scaffold (MANDATORY for all projects)
+
+**When to install**: ALWAYS. Every project, every stack. The multi-session race condition (concurrent Claude Code terminals on the same repo causing `git checkout` to silently switch HEAD across terminals) is an architectural issue in git itself, not a stack-specific problem. It affects anyone running multiple Claude sessions on a single repo.
+
+**Why it's mandatory**: Has caused real incidents — see the 2026-04-12 session where a drift-gate commit briefly landed on `main` because a concurrent terminal switched HEAD. The fix is disciplined use of `git worktree`, and the friction of "manually set up a worktree including copying env files" is enough to make people skip it. The scaffold removes that friction.
+
+### Files to install
+
+Copy from `references/worktree-scaffold/` into the new project root:
+
+```
+scripts/worktree-add.sh      — create a new worktree with env file copy + npm install
+scripts/worktree-remove.sh   — safely remove a worktree with merge-status check
+```
+
+Both must be `chmod +x`. Both are stack-agnostic — they use relative path discovery (`git rev-parse --show-toplevel`) and work in any repo.
+
+### CLAUDE.md section
+
+The `claude-md-template.md` already includes a "Multi-session workflow" section under Git that documents both scripts. Keep it in the generated CLAUDE.md for every project — there's no "no database, skip this" caveat because worktrees apply universally.
+
+### Checkpoint for /kickoff
+
+No user prompt needed — install unconditionally. Print a one-liner in the skeleton output:
+
+> Installed git worktree helpers at scripts/worktree-add.sh and scripts/worktree-remove.sh. When you need a second Claude session on this repo, run `scripts/worktree-add.sh feature/T-name` in a new terminal instead of `git checkout`. See CLAUDE.md "Multi-session workflow" for details.
 - `infrastructure-template.md` — Infrastructure doc
