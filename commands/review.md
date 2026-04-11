@@ -1,6 +1,6 @@
 ---
 name: review
-description: Verification loop — Design Doc compliance validation with doc sync and anti-pattern checks
+description: Verification loop  - Design Doc compliance validation with doc sync and anti-pattern checks
 ---
 
 **Command Context**: Post-implementation quality assurance — the VERIFICATION LOOP
@@ -33,6 +33,22 @@ Design Doc (uses most recent if omitted): $ARGUMENTS
 # Read CLAUDE.md for anti-patterns
 ! cat CLAUDE.md 2>/dev/null | head -200
 ```
+
+### Step 1a: DB schema drift gate (CLAUDE.md Rule 14)
+
+**If the branch touches ANY migration file or deployment config**, run the drift gate before proceeding with any other review step:
+
+```bash
+! git diff --name-only origin/main...HEAD | grep -E "supabase/migrations|\.github/workflows|scripts/drift-check" > /dev/null && npm run drift
+```
+
+- **Exit 0**: drift gate passed. Paste the output. Continue with the review.
+- **Exit 1**: DRIFT DETECTED. Block the review. The branch cannot be approved for merge with red drift. Surface the drift report to the user and require a fix (apply the missing migration OR document in the allowlist with justification) before the review continues.
+- **Exit 2**: config error (missing env var / unreachable DB). Flag the infra issue but allow the review to continue with a caveat — drift-gate coverage is currently blind for this PR.
+
+**If the branch does NOT touch migrations or deployment config**, skip this step.
+
+**Why this is mandatory**: the three production incidents on 2026-04-11 (Aurora Hunter + GuestPad alarm_history) happened because migrations were committed to PRs, reviews passed, and the code assumed the migrations had been applied — but nobody actually ran them against prod. /review is the last line of defense before merge. Do not skip this step.
 
 ### Step 2: Execute code-reviewer
 

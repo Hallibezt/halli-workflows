@@ -1,6 +1,6 @@
 ---
 name: kickoff
-description: Start a new project — interactive brainstorming, competitive analysis, infrastructure planning, and project skeleton generation
+description: Start a new project  - interactive brainstorming, competitive analysis, infrastructure planning, and project skeleton generation
 ---
 
 **Command Context**: New project initialization — from idea to ready-to-code skeleton
@@ -139,7 +139,7 @@ prompt: |
   Ambition: [MVP/Production/Enterprise]
 
   Create:
-  1. CLAUDE.md (engineering bible with context router)
+  1. CLAUDE.md (engineering bible with context router — INCLUDING Rule 14 if DB-backed)
   2. docs/plans/product-roadmap.md (phases from features)
   3. docs/plans/backlog.md (initial items)
   4. docs/plans/build-testing.md (empty template)
@@ -147,11 +147,27 @@ prompt: |
   6. docs/prd/[project]-prd.md (from brainstorm)
   7. Domain-specific CLAUDE.md files (based on stack)
   8. .env.example (from infrastructure env vars)
+  9. IF the project uses a managed database (Supabase, Neon, Railway Postgres, etc.):
+     install the Deployment Integrity Gate scaffold. This is MANDATORY. See
+     the project-bootstrap skill's "Deployment Integrity Gate Scaffold" section
+     for the exact file list and post-install instructions. Files go into:
+       scripts/drift-check.ts
+       scripts/drift-check.allowlist.json
+       scripts/setup-drift-role.sql
+       .github/workflows/drift-check.yml
+       .githooks/pre-push
+       docs/drift-gate.md
+     Plus package.json additions (drift / drift:verbose / drift:json / postinstall
+     scripts + pg / @types/pg / tsx / @types/node devDeps).
+     After installing, the agent MUST print manual setup instructions for the
+     user: how to create the drift_reader Postgres role, how to build the
+     connection string, how to add it to .env.local and GitHub secrets, and
+     how to verify with `npm run drift`.
 ```
 
-**Expected output**: List of created files.
+**Expected output**: List of created files + (if DB) the manual drift_reader setup instructions.
 
-**[Stop: User reviews skeleton, approves or requests changes]**
+**[Stop: User reviews skeleton + runs the drift_reader setup SQL, approves or requests changes]**
 
 ## Step 6: Completion
 

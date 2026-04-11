@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+# Pre-push hook: run DB schema drift check before letting any push reach the remote.
+#
+# Activated automatically by the root package.json "postinstall" script which
+# sets `git config core.hooksPath .githooks` on first `npm install`.
+#
+# Bypass: `git push --no-verify` — ONLY in emergencies, and document the
+# justification in the push commit message per CLAUDE.md Rule 14.
+#
+# Requirements: DRIFT_DB_URL_<PROJECT> env vars must be set in .env.local
+# (drift-check.ts auto-loads .env.local on startup).
+
+set -euo pipefail
+
+# Skip the full check when pushing a branch that doesn't touch migrations /
+# drift files — cheap early-out so the gate doesn't add latency to unrelated
+# pushes. But still run the silent sanity check so drift introduced
+# out-of-band (e.g., manual prod edits) is caught before push.
+CHANGED=$(git diff --name-only origin/main...HEAD 2>/dev/null || true)
+if ! echo "$CHANGED" | grep -qE 'supabase/migrations/|scripts/drift-check|\.github/workflows/drift-check'; then
+  if ! npm run drift --silent > /dev/null 2>&1; then
+    echo ""
+    echo "⚠️  Pre-push: drift check FAILED on main branch (pre-existing drift, not from this push)."
+    echo "    Run \`npm run drift\` to see details. Fix before pushing if related to your work."
+    echo "    To bypass: git push --no-verify (and document in commit message per CLAUDE.md Rule 14)"
+    exit 1
+  fi
+  exit 0
+fi
+
+echo ""
+echo "→ Pre-push: running DB schema drift check (schema-touching changes detected)…"
+if npm run drift --silent; then
+  echo "✓ Drift check passed. Proceeding with push."
+  exit 0
+else
+  echo ""
+  echo "✗ Drift check FAILED. Your push has been blocked."
+  echo ""
+  echo "Fix options:"
+  echo "  1. Apply the missing migration(s) to production before pushing"
+  echo "  2. Add known false positives to scripts/drift-check.allowlist.json"
+  echo "  3. Bypass with \`git push --no-verify\` (emergency only — document in commit message)"
+  echo ""
+  exit 1
+fi

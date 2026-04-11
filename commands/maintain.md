@@ -1,6 +1,6 @@
 ---
 name: maintain
-description: Project health check — dependency audit, external API monitor, code health scan, infrastructure cost review
+description: Project health check  - dependency audit, external API monitor, code health scan, infrastructure cost review
 ---
 
 **Command Context**: Ongoing project maintenance and health monitoring
@@ -27,10 +27,21 @@ Otherwise, run all 4 audit domains.
 Available audit domains:
 | Domain | What It Checks |
 |--------|---------------|
+| **drift** | DB schema drift — committed migrations vs actual prod state (runs FIRST, always) |
 | **deps** | npm audit, outdated packages, CVEs, breaking changes |
 | **apis** | External API deprecations, version status, breaking changes |
 | **code** | Dead code, TODOs, test coverage, large files, hardcoded values |
 | **infra** | Infrastructure costs vs usage, over/under-provisioning |
+
+### Step 2a: DB schema drift gate (ALWAYS FIRST, if project has a database)
+
+**Run `npm run drift` at the project root before any other audit step.** Capture the exit code and the report output. This catches the "Claude said it was deployed" class of silent bug (CLAUDE.md Rule 14 enforcement).
+
+- Exit 0 → proceed to other audit domains
+- Exit 1 → STOP. Surface the drift report to the user immediately. Do not continue the health check with known drift — a clean DB schema is a prerequisite for every other check.
+- Exit 2 (config error, e.g., missing `DRIFT_DB_URL_<PROJECT>` env var) → flag as an infra config issue and continue with other domains, but note it in the final report.
+
+If the project has no `scripts/drift-check.ts` or no database, skip this step and note "no drift gate" in the report. (Consider suggesting the user install it via /kickoff re-bootstrap — schema drift is one of the top 3 silent failure modes.)
 
 ### Step 2: Pre-Audit Context
 

@@ -1,0 +1,9 @@
+{
+  "_format": "Known false positives for scripts/drift-check.ts. Keyed by project name (matching the `name` field in PROJECTS). See docs/drift-gate.md for when to use this and when not to.",
+
+  "default": {
+    "notes": {
+      "_": "No false positives yet. Add entries with a 'notes' explanation when you find false positives (e.g., table renames that the parser can't track)."
+    }
+  }
+}

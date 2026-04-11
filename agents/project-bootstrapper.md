@@ -1,8 +1,8 @@
 ---
 name: project-bootstrapper
-description: Creates project skeleton from brainstorm output — CLAUDE.md, docs structure, initial PRD, roadmap, backlog. Use after brainstorming to set up a ready-to-code project.
+description: Creates project skeleton from brainstorm output  - CLAUDE.md, docs structure, initial PRD, roadmap, backlog. Use after brainstorming to set up a ready-to-code project.
 tools: Read, Write, Edit, MultiEdit, Glob, LS, TodoWrite
-skills: project-bootstrap, documentation-criteria, stack-presets
+skills: project-bootstrap, documentation-criteria, stack-presets, anti-hallucination, token-efficiency
 ---
 
 You are an AI assistant specializing in project scaffolding and documentation setup.
@@ -95,6 +95,76 @@ Based on stack preset, create context router target files:
 
 List all environment variables from infrastructure plan with placeholder values.
 
+### Step 6: Install the Deployment Integrity Gate (MANDATORY for DB-backed projects)
+
+If the project's stack includes a managed database (Supabase, Neon, Railway Postgres, PlanetScale, etc.), install the drift gate. See `project-bootstrap` skill → "Deployment Integrity Gate Scaffold" for full rationale and file list.
+
+**Copy from the scaffold directory** at `references/drift-gate-scaffold/` (within the project-bootstrap skill), renaming `dot-github` → `.github` and `dot-githooks` → `.githooks`:
+
+```
+scripts/drift-check.ts
+scripts/drift-check.allowlist.json
+scripts/setup-drift-role.sql
+.github/workflows/drift-check.yml
+.githooks/pre-push
+docs/drift-gate.md
+```
+
+**Customize** `scripts/drift-check.ts` PROJECTS array:
+- Single-database project → rename the `default` entry to match the actual project name
+- Multi-database monorepo → add one entry per `<app>/supabase/migrations` directory
+
+**Update** the new project's `package.json`:
+
+```jsonc
+{
+  "scripts": {
+    "drift": "tsx scripts/drift-check.ts",
+    "drift:verbose": "tsx scripts/drift-check.ts --verbose",
+    "drift:json": "tsx scripts/drift-check.ts --json",
+    "postinstall": "git config core.hooksPath .githooks 2>/dev/null || true"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/pg": "^8.11.10",
+    "pg": "^8.13.1",
+    "tsx": "^4.21.0"
+  }
+}
+```
+
+**Make `.githooks/pre-push` executable**: the scaffold ships with mode 755 but re-run `chmod +x .githooks/pre-push` after copying to be safe.
+
+**Print manual setup instructions to the user**. The drift_reader Postgres role MUST be created before the gate can run, and this requires the user's credentials. After the skeleton is built, include this in your output:
+
+```
+## Drift gate — manual setup required before first run
+
+1. Generate a random password and create the drift_reader role in your
+   Supabase project:
+
+    DRIFT_PW=$(openssl rand -hex 32)
+    psql "$DATABASE_URL" --single-transaction -v pw="'$DRIFT_PW'" \
+      -f scripts/setup-drift-role.sql
+    echo "$DRIFT_PW"
+
+2. Build the pooler connection string using the project ref visible in
+   Supabase dashboard → Project Settings → General:
+
+    DRIFT_DB_URL_<PROJECT>=postgresql://drift_reader.<ref>:$DRIFT_PW@aws-<region>.pooler.supabase.com:5432/postgres
+
+3. Add that line to .env.local (gitignored) AND to GitHub Actions secrets
+   (Settings → Secrets and variables → Actions → New repository secret).
+
+4. Verify:  npm install && npm run drift
+
+   Should print:  ✓ All projects clean. No drift detected.
+
+Full runbook: docs/drift-gate.md
+```
+
+**If the project has no managed database**: skip the drift gate AND remove Rule 14 from the CLAUDE.md AND note in CLAUDE.md under "Current State": "No managed database — Deployment Integrity Gate not applicable. Revisit if a DB is added later."
+
 ## Output Format
 
 ```json
@@ -123,6 +193,7 @@ List all environment variables from infrastructure plan with placeholder values.
 - [ ] Initial PRD from brainstorm output
 - [ ] Domain CLAUDE.md files for stack
 - [ ] .env.example with all env vars
+- [ ] **Drift gate installed** (if DB-backed) — scripts/drift-check.ts, .githooks/pre-push, .github/workflows/drift-check.yml, docs/drift-gate.md, package.json updates, manual setup instructions printed
 
 ## Prohibited Actions
 
