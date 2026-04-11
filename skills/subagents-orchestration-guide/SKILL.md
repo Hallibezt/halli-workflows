@@ -61,55 +61,6 @@ All investigation, analysis, and implementation work flows through specialized s
 23. **code-verifier**: Document-code consistency matching
 24. **scope-discoverer**: Codebase scope discovery for reverse engineering
 
-## Sub-Phase Decomposition (MANDATORY CHECK)
-
-**Large phases MUST be broken into sub-phases.** A monolithic phase with 15+ tasks or 3+ sprints is too big to plan, build, and test in one pass. This is the #1 cause of stalled work and context overflow.
-
-### When to Decompose
-
-| Indicator | Threshold | Action |
-|-----------|-----------|--------|
-| Backlog items | >15 items in phase | MUST decompose |
-| Sprint count | >2 sprints | MUST decompose |
-| File count | >20 files touched | MUST decompose |
-| Design doc size | >1500 lines | SHOULD decompose |
-| Mixed concerns | Auth + UI + API + infra in one phase | MUST decompose |
-
-### Sub-Phase Rules
-
-1. **Each sub-phase is 5-15 tasks**, completable in 1-2 sprints
-2. **Each sub-phase goes through the full cycle**: plan → build → test → manual test → approve
-3. **Each sub-phase produces independently testable functionality** — you can run the app and see something work
-4. **Sub-phases are named**: Phase 1A, 1B, 1C (or descriptive: "Phase 1A — Skeleton + Auth")
-5. **Design docs cover the full phase** but are structured with clear sub-phase sections
-6. **Work plans are created per sub-phase**, not per phase — plan 1A, build 1A, then plan 1B
-7. **Dependencies flow forward** — sub-phase B can depend on A, but not vice versa
-
-### Decomposition Pattern
-
-Group by **dependency layers**, not by feature:
-
-```
-Sub-phase A: Foundation (scaffold, config, auth, DB schema)
-    ↓ A must work before B starts
-Sub-phase B: Core data (CRUD for primary entities)
-    ↓ B must work before C starts
-Sub-phase C: Core features (the main value prop)
-    ↓ C must work before D starts
-Sub-phase D: Enhancement (secondary features, polish)
-    ↓ D must work before E starts
-Sub-phase E: Launch prep (monitoring, CI, store submission)
-```
-
-Each sub-phase delivers a working increment. After A, you have auth. After B, you can add data. After C, the app is usable. After D, it's polished. After E, it ships.
-
-### Orchestrator Responsibility
-
-The orchestrator (not the user) checks phase size during `/design` and `/plan`. If thresholds are exceeded:
-1. **Stop and propose sub-phases** with names and scope
-2. **Get user approval** on the breakdown
-3. **Proceed with first sub-phase only**
-
 ## Scale Determination and Document Requirements
 
 | Scale | Files | PRD | ADR | Design Doc | Work Plan |
@@ -209,3 +160,17 @@ During flow execution, if user mentions:
 - Always pass deliverables from previous step
 - Use structured JSON for agent communication
 - Orchestrator composes commit messages from task-executor's `changeSummary`
+
+## Token Efficiency in Orchestration
+
+Orchestrators should be aware of token costs across multi-agent workflows.
+See `token-efficiency` skill for full details. Key principles for orchestration:
+
+- **Subagent delegation is a token optimization** — verbose work in subagent contexts
+  means only summaries return to the orchestrator, keeping the main context lean
+- **Compact between phases** — after a phase completes, the orchestrator should consider
+  compacting conversation history before starting the next phase
+- **Right-size agent prompts** — pass only what the agent needs, not the full project context.
+  Agent prompts should contain the task, relevant rules, and file paths — not full file contents
+- **Tool result discipline** — when subagents return large outputs, extract the key facts
+  for the orchestrator context and let the raw output expire

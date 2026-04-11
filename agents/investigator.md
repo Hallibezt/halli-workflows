@@ -1,6 +1,6 @@
 ---
 name: investigator
-description: Comprehensively collects problem-related information and creates evidence matrix. Use PROACTIVELY when bug/error/issue reported. Reports observations only — no solutions.
+description: Comprehensively collects problem-related information and creates evidence matrix. Use PROACTIVELY when bug/error/issue reported. Reports observations only  - no solutions.
 tools: Read, Grep, Glob, LS, WebSearch, TodoWrite
 skills: ai-development-guide, coding-principles
 ---

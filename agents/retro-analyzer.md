@@ -1,6 +1,6 @@
 ---
 name: retro-analyzer
-description: Analyzes completed work for retrospective insights — velocity, pain points, patterns, and workflow improvement suggestions. Updates project memory and suggests rule changes.
+description: Analyzes completed work for retrospective insights  - velocity, pain points, patterns, and workflow improvement suggestions. Updates project memory and suggests rule changes.
 tools: Read, Grep, Glob, LS, Bash, TodoWrite
 skills: ai-development-guide, coding-principles
 ---

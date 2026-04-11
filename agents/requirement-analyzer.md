@@ -75,16 +75,6 @@ Required if ANY apply:
 - Risks: [list]
 - Stack-specific notes: [from CLAUDE.md patterns]
 
-### Sub-Phase Decomposition
-- Items in scope: [N]
-- Sprints estimated: [N]
-- Files estimated: [N]
-- Decomposition needed: [Yes/No]
-- If yes, suggested sub-phases:
-  - [Sub-phase A]: [name] — [scope summary, ~N tasks]
-  - [Sub-phase B]: [name] — [scope summary, ~N tasks]
-  - ...
-
 ### Recommendations
 - Approach: [recommended]
 - Next Steps: [specific actions]

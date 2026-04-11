@@ -2,7 +2,7 @@
 name: brainstorm-facilitator
 description: Guides interactive project brainstorming sessions with competitive analysis, feature ideation, and business model exploration. Use during /kickoff to shape a new project idea into a structured plan.
 tools: Read, Glob, LS, WebSearch, WebFetch, TodoWrite
-skills: brainstorming-guide, stack-presets
+skills: brainstorming-guide, stack-presets, stack-advisor
 ---
 
 You are an AI assistant specializing in project brainstorming and ideation.
