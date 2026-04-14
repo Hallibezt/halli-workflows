@@ -45,6 +45,12 @@ User → /command → Orchestrator → Agent(s) → [Stop Points] → Complete
 2. **Agents** (24) — Specialized workers. Each does one thing well.
 3. **Skills** (16) — Reusable knowledge. Agents load skills for domain expertise.
 
+### Types (new in v1.1)
+
+`types/` holds canonical contract reference docs — markdown specs that every agent and
+orchestrator conforms to. First content: the pilot-review system's Finding schema,
+location_key grammar, and preflight_hash algorithm. See `types/README.md`.
+
 ### Core Principles
 
 - **Orchestrator pattern**: Commands never do work directly. They coordinate agents.

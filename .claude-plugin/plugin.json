@@ -1,7 +1,7 @@
 {
   "name": "halli-workflows",
-  "version": "1.0.0",
-  "description": "Full-lifecycle development workflows — from project kickoff and brainstorming through design, implementation, and ongoing maintenance. 23 specialized agents, 15 skills, stack-aware presets.",
+  "version": "1.1.0",
+  "description": "Full-lifecycle development workflows — from project kickoff and brainstorming through design, implementation, and ongoing maintenance. 23 specialized agents, 15 skills, stack-aware presets. v1.1 adds canonical Finding / location_key / preflight_hash contracts under types/ for the pilot-review system.",
   "author": {
     "name": "Halli"
   },
