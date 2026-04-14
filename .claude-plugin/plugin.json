@@ -1,7 +1,7 @@
 {
   "name": "halli-workflows",
-  "version": "1.1.0",
-  "description": "Full-lifecycle development workflows — from project kickoff and brainstorming through design, implementation, and ongoing maintenance. 23 specialized agents, 15 skills, stack-aware presets. v1.1 adds canonical Finding / location_key / preflight_hash contracts under types/ for the pilot-review system.",
+  "version": "1.2.0",
+  "description": "Full-lifecycle development workflows — from project kickoff and brainstorming through design, implementation, and ongoing maintenance. 23 specialized agents, 15 skills, stack-aware presets. v1.1 adds canonical Finding / location_key / preflight_hash contracts under types/ for the pilot-review system. v1.2 adds the pilot-review-orchestrator command (scaffold — reviewer agents land in T1207–T1214).",
   "author": {
     "name": "Halli"
   },
@@ -37,7 +37,8 @@
     "./commands/think.md",
     "./commands/audit.md",
     "./commands/verify-claims.md",
-    "./commands/workflow-edit.md"
+    "./commands/workflow-edit.md",
+    "./commands/pilot-review-orchestrator.md"
   ],
   "agents": [
     "./agents/brainstorm-facilitator.md",
