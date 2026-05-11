@@ -1,7 +1,7 @@
 {
   "name": "halli-workflows",
-  "version": "1.5.0",
-  "description": "Full-lifecycle development workflows — from project kickoff and brainstorming through design, implementation, and ongoing maintenance. 36 specialized agents, 18 skills, stack-aware presets. v1.5 adds 2 UX reviewer agents (guest-ux-reviewer, owner-ux-reviewer) with Laws of UX heuristic rubrics (Fitts, Hick, Jakob, Miller, Doherty, etc). v1.4 wired the pilot-review orchestrator end-to-end. v1.3 added 8 pilot-review Phase 1 reviewer agents.",
+  "version": "1.6.0",
+  "description": "Full-lifecycle development workflows — from project kickoff and brainstorming through design, implementation, and ongoing maintenance. 37 specialized agents, 19 skills, stack-aware presets. v1.4 wired the pilot-review orchestrator end-to-end. v1.5 added 2 UX reviewer agents (guest-ux-reviewer, owner-ux-reviewer) with Laws of UX heuristic rubrics. v1.6 adds Rule 15 enforcement — code-debt-reviewer agent + code-debt-registry skill close the agentic 'hopeful comments' anti-pattern that shipped the GuestPad reset-and-unlink bug (2026-05-10).",
   "author": {
     "name": "Halli"
   },
@@ -19,7 +19,28 @@
     "mobile",
     "api",
     "pilot-review",
-    "ux-review"
+    "ux-review",
+    "code-debt-registry"
+  ],
+  "commands": [
+    "./commands/kickoff.md",
+    "./commands/maintain.md",
+    "./commands/retro.md",
+    "./commands/guide.md",
+    "./commands/implement.md",
+    "./commands/design.md",
+    "./commands/plan.md",
+    "./commands/build.md",
+    "./commands/task.md",
+    "./commands/review.md",
+    "./commands/diagnose.md",
+    "./commands/reverse-engineer.md",
+    "./commands/add-integration-tests.md",
+    "./commands/think.md",
+    "./commands/audit.md",
+    "./commands/verify-claims.md",
+    "./commands/workflow-edit.md",
+    "./commands/pilot-review-orchestrator.md"
   ],
   "agents": [
     "./agents/brainstorm-facilitator.md",
@@ -57,6 +78,7 @@
     "./agents/monitoring-reviewer.md",
     "./agents/freshness-reviewer.md",
     "./agents/guest-ux-reviewer.md",
-    "./agents/owner-ux-reviewer.md"
+    "./agents/owner-ux-reviewer.md",
+    "./agents/code-debt-reviewer.md"
   ]
 }

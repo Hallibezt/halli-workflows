@@ -27,8 +27,8 @@ It was forked from [shinpr/claude-code-workflows](https://github.com/shinpr/clau
 | Build testing | Not included | Checklist before every merge |
 | Verification loop | Implicit | Explicit: implement → review → fix |
 | Memory system | None | Cross-session continuity |
-| Total agents | 18 | 24 (7 new) |
-| Total skills | 11 | 16 (8 new) |
+| Total agents | 18 | 36 (18 new) |
+| Total skills | 11 | 17 (9 new — incl. `code-debt-registry` for Rule 15 enforcement) |
 | Total commands | 9 | 14 (5 new) |
 
 ## Architecture

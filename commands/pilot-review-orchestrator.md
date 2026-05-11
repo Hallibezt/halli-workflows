@@ -1,6 +1,6 @@
 ---
 name: pilot-review-orchestrator
-description: Plugin-side orchestrator for /pilot-review — parses flags, loads stack context, pre-flights rubrics, fans out to 8 reviewer agents in parallel (semaphore default 5), runs the full aggregation pipeline (dedup → verify-claims → anchor-validator), routes findings by severity (P0+P1 → eljun, P2 → backlog.md, P3 → review-notes.md), and writes a severity-ordered dashboard. Read-only on source tree. Every sub-stage follows a dedicated pure-markdown spec under commands/pilot-review/.
+description: Plugin-side orchestrator for /pilot-review — parses flags, loads stack context, pre-flights rubrics, fans out to 9 reviewer agents in parallel (semaphore default 5), runs the full aggregation pipeline (dedup → verify-claims → anchor-validator), routes findings by severity (P0+P1 → eljun, P2 → backlog.md, P3 → review-notes.md), and writes a severity-ordered dashboard. Read-only on source tree. Every sub-stage follows a dedicated pure-markdown spec under commands/pilot-review/.
 ---
 
 **Command Context**: Plugin-side orchestrator for the `/pilot-review` pre-pilot audit squad (Design Doc §3, §11, §12, §22).
@@ -54,6 +54,7 @@ env = {
   repoRoot: <repo_root from shim>,
   knownAgents: [
     "drift-gate-reviewer",
+    "code-debt-reviewer",
     "codebase-auditor-adapter",
     "isolation-reviewer",
     "auth-boundary-reviewer",
@@ -93,25 +94,26 @@ This stack context is NOT displayed to the user. It is threaded into each review
 
 ### Step 3: Resolve Reviewer Roster
 
-**Phase 1 default roster (8 backend agents)** — invokable via `halli-workflows:<name>`:
+**Phase 1 default roster (9 backend agents)** — invokable via `halli-workflows:<name>`:
 
 | # | Agent name | Model | Required rubric |
 |---|------------|-------|-----------------|
 | 1 | `drift-gate-reviewer` | none (shell wrapper) | none |
-| 2 | `codebase-auditor-adapter` | haiku | none |
-| 3 | `isolation-reviewer` | opus | none (rubric = CLAUDE.md Rule 0 / Rule 4) |
-| 4 | `auth-boundary-reviewer` | opus | none (rubric = CLAUDE.md Rule 2 / Rule 3 / api/CLAUDE.md) |
-| 5 | `privacy-gdpr-reviewer` | opus | `docs/review-rubrics/privacy-gdpr.md` |
-| 6 | `payment-reviewer` | opus | `docs/review-rubrics/payment.md` |
-| 7 | `monitoring-reviewer` | sonnet | `docs/review-rubrics/monitoring.md` |
-| 8 | `freshness-reviewer` | haiku | none (live npm/GHSA/deps.dev — stack-agnostic per §4.7) |
+| 2 | `code-debt-reviewer` | none (shell wrapper) | none (CLAUDE.md Rule 15) |
+| 3 | `codebase-auditor-adapter` | haiku | none |
+| 4 | `isolation-reviewer` | opus | none (rubric = CLAUDE.md Rule 0 / Rule 4) |
+| 5 | `auth-boundary-reviewer` | opus | none (rubric = CLAUDE.md Rule 2 / Rule 3 / api/CLAUDE.md) |
+| 6 | `privacy-gdpr-reviewer` | opus | `docs/review-rubrics/privacy-gdpr.md` |
+| 7 | `payment-reviewer` | opus | `docs/review-rubrics/payment.md` |
+| 8 | `monitoring-reviewer` | sonnet | `docs/review-rubrics/monitoring.md` |
+| 9 | `freshness-reviewer` | haiku | none (live npm/GHSA/deps.dev — stack-agnostic per §4.7) |
 
 **Phase 2 roster additions (only when `flags.includeUx === true`)**:
 
 | # | Agent name | Model | Required rubric |
 |---|------------|-------|-----------------|
-| 9 | `owner-ux-reviewer` | sonnet | `docs/ux-rubrics/owner-dashboard.md` |
-| 10 | `guest-ux-reviewer` | sonnet | `docs/ux-rubrics/guest-tablet.md` |
+| 10 | `owner-ux-reviewer` | sonnet | `docs/ux-rubrics/owner-dashboard.md` |
+| 11 | `guest-ux-reviewer` | sonnet | `docs/ux-rubrics/guest-tablet.md` |
 
 Build the initial roster in the order above.
 
@@ -180,7 +182,7 @@ agents = roster.map(r => ({
 
 **`sinceAppliesTo(agentName)`** — per flags.md §since:
 - Returns `flags.since` for: `codebase-auditor-adapter`, `isolation-reviewer`, `auth-boundary-reviewer`, `privacy-gdpr-reviewer`, `payment-reviewer`, `owner-ux-reviewer`, `guest-ux-reviewer`.
-- Returns `null` (always full-scope) for: `drift-gate-reviewer`, `freshness-reviewer`, `monitoring-reviewer`.
+- Returns `null` (always full-scope) for: `drift-gate-reviewer`, `code-debt-reviewer`, `freshness-reviewer`, `monitoring-reviewer`.
 
 **`buildAgentPrompt`** constructs the per-agent prompt. Each reviewer's own system prompt describes what it expects as user input; the orchestrator's prompt is a thin invocation note:
 
@@ -249,7 +251,7 @@ Call it `dedupedFindings`. Length may be less than `validFindings.length`.
 Follow `halli-workflows:commands/pilot-review/verify-claims-pass.md`. Invoke `verifyClaimsPass(dedupedFindings, { repo_root })`.
 
 The module partitions findings into exempt / verify / passthrough buckets:
-- **Exempt** (no verifier call): `agent === "drift-gate-reviewer"`, `heuristic_id === "RUBRIC_MISSING"`, `agent === "freshness-reviewer" && heuristic_id ~ /^fresh\.cve\./`, `location_key` matches `/^(dep|mon|rubric-gap):/`.
+- **Exempt** (no verifier call): `agent === "drift-gate-reviewer"`, `agent === "code-debt-reviewer"`, `heuristic_id === "RUBRIC_MISSING"`, `agent === "freshness-reviewer" && heuristic_id ~ /^fresh\.cve\./`, `location_key` matches `/^(dep|mon|rubric-gap):/`.
 - **Verify** (sent to `halli-workflows:ground-truth-verifier`): every non-exempt P0 and P1 finding.
 - **Passthrough** (no verifier call this run): non-exempt P2 and P3 findings.
 
@@ -390,6 +392,7 @@ input = {
   skippedAgents: <union of (rubric-check skipped) + (flag-filtered) + (crashed) — deduped>,
   reviewerModels: {
     "drift-gate-reviewer":        "none",
+    "code-debt-reviewer":         "none",
     "codebase-auditor-adapter":   "claude-haiku-4-5",
     "isolation-reviewer":         "claude-opus-4-6",
     "auth-boundary-reviewer":     "claude-opus-4-6",
@@ -475,7 +478,7 @@ Self-check at the end of the run (Step 12) confirms these invariants. Violations
 Several edge cases must still produce a well-formed dashboard rather than crashing:
 
 - **Empty roster** (e.g. `--only=some-missing-agent` — wait, `parseFlags` throws; so really: `--only=drift-gate-reviewer` + drift-gate crashes → empty usable findings). Dashboard renders with `_No findings._` in every bucket and SKIPPED AGENTS lists the crashed entry.
-- **All rubrics missing + `--force`** — Step 4 keeps only agents without required rubrics (`drift-gate-reviewer`, `isolation-reviewer`, `auth-boundary-reviewer`, `freshness-reviewer`). Those 4 still run. Dashboard includes their findings and the rubric-missing P0s.
+- **All rubrics missing + `--force`** — Step 4 keeps only agents without required rubrics (`drift-gate-reviewer`, `code-debt-reviewer`, `isolation-reviewer`, `auth-boundary-reviewer`, `freshness-reviewer`). Those 5 still run. Dashboard includes their findings and the rubric-missing P0s.
 - **Every reviewer crashes** — roster.length `REVIEWER_CRASHED` P3 findings flow through dedup (each has a unique location_key so no merging), verify-claims (exempt via `mon:` prefix), and anchor-validator (exempt because they are operational, not code). Dashboard renders them in REVIEW NOTES (P3) and SKIPPED AGENTS.
 - **Anchor-validator fails on every finding** — all findings demote one tier; the dashboard still renders in the (now-lower) severity bucket.
 
@@ -530,6 +533,7 @@ The invariant: **the dashboard file is always written** (Step 11 is unconditiona
   - `halli-workflows:commands/pilot-review/dashboard-generator.md` — §11 dashboard render
 - Reviewer agents (invokable via `halli-workflows:<name>`):
   - `halli-workflows:drift-gate-reviewer` (shell wrapper)
+  - `halli-workflows:code-debt-reviewer` (shell wrapper)
   - `halli-workflows:codebase-auditor-adapter` (haiku, wraps existing codebase-auditor)
   - `halli-workflows:isolation-reviewer` (opus)
   - `halli-workflows:auth-boundary-reviewer` (opus)
