@@ -194,20 +194,23 @@ After all work is complete:
 
 ## Backlog Status Transitions
 
-The implement command manages these transitions automatically:
+Backlog conventions (status values, item shape, length limits) live in the skill
+`halli-workflows:backlog-conventions`. Read that skill once at the start of an
+implement run. The implement command manages these transitions automatically:
 
 ```
 TODO ──── phase starts ────→ IN PROGRESS
 IN PROGRESS ── phase gate passes ──→ IN REVIEW
-IN REVIEW ──── user confirms ────→ DONE (date)
+IN REVIEW ──── user confirms ────→ DONE (YYYY-MM-DD)
 ```
-
-**Format**: Use exactly `TODO | IN PROGRESS | IN REVIEW | DONE (date)` in backlog files.
-No emoji, no strikethrough. Machine-readable.
 
 **Where to update**: Find backlog items by cross-referencing the phase manifest's
 "Backlog items" field with the project's backlog file(s). Check CLAUDE.md for
 which backlog files exist (some projects have multiple — update ALL relevant ones).
+
+**Forbidden transitions**: Never reshape an existing item while transitioning its
+status (don't move table-row → bullet, don't rewrite the body). If an item is
+malformed, flag it; reshape happens in a triage pass, not during implementation.
 
 ## CRITICAL Sub-agent Invocation Constraints
 

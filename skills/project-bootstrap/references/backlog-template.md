@@ -1,37 +1,57 @@
-# Backlog — {{PROJECT_NAME}}
+# {{PROJECT_NAME}} Backlog — Issues, Gaps & Polish Items
+
+> Capture everything that needs fixing as we discover it.
+> Conforms to `halli-workflows:backlog-conventions`. Last triaged: {{DATE}}.
 
 ## How to Use
-- Items added as discovered during development
-- Severity: Critical > High > Medium > Low
-- Status: Open, In Progress, DONE (date), Won't Fix
-- Reference roadmap phase when applicable
+
+- **Item shape**: Table row (clustered) OR single bullet (≤3 lines).
+- **Status values**: `TODO | IN PROGRESS | IN REVIEW | DONE (YYYY-MM-DD) | BLOCKED (reason) | WONTFIX (reason) | DEPRECATED (reason)`.
+- **Severity**: `P0` (broken/security) · `P1` (blocks sprint) · `P2` (quality/hygiene) · `P3` (polish).
+- If an item needs >3 lines of context, extract to `docs/design/<name>.md` and leave a one-line pointer.
+- See `halli-workflows:backlog-conventions` for the full rule.
+
+---
+
+## 🚦 Current focus — {{ACTIVE_FOCUS_AREA}}
+
+{{One-paragraph description of what's actively being worked on, with a pointer
+to the work plan / branch / commits.}}
+
+---
 
 ## Infrastructure & Foundation
 
-| # | Area | Issue | Severity | Status | Phase |
-|---|------|-------|----------|--------|-------|
-| 1 | | | | Open | |
+| ID  | Area | Issue | Severity | Status |
+|-----|------|-------|----------|--------|
+|     |      |       |          |        |
 
 ## Security
 
-| # | Area | Issue | Severity | Status | Phase |
-|---|------|-------|----------|--------|-------|
-| | | | | | |
+| ID  | Area | Issue | Severity | Status |
+|-----|------|-------|----------|--------|
+|     |      |       |          |        |
 
 ## Performance
 
-| # | Area | Issue | Severity | Status | Phase |
-|---|------|-------|----------|--------|-------|
-| | | | | | |
+| ID  | Area | Issue | Severity | Status |
+|-----|------|-------|----------|--------|
+|     |      |       |          |        |
 
 ## UX / Design
 
-| # | Area | Issue | Severity | Status | Phase |
-|---|------|-------|----------|--------|-------|
-| | | | | | |
+| ID  | Area | Issue | Severity | Status |
+|-----|------|-------|----------|--------|
+|     |      |       |          |        |
 
 ## Technical Debt
 
-| # | Area | Issue | Severity | Status | Phase |
-|---|------|-------|----------|--------|-------|
-| | | | | | |
+| ID  | Area | Issue | Severity | Status |
+|-----|------|-------|----------|--------|
+|     |      |       |          |        |
+
+## Other / Discovered During Usage
+
+(One-off items go here as shape-B bullets:)
+
+- **[TODO P3]** {{Example title}} — {{1-2 sentence body with file path or context}}.

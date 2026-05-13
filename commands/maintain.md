@@ -126,7 +126,9 @@ Which items would you like to address now?
 
 For selected items:
 1. Create task files in `docs/plans/tasks/maintenance-YYYYMMDD-NNN.md`
-2. Add items to `docs/plans/backlog.md`
+2. Add items to `docs/plans/backlog.md` — conform to `halli-workflows:backlog-conventions`
+   (shape A table row OR shape B single bullet ≤3 lines; status tag required;
+   if context exceeds 3 lines, extract to `docs/design/<name>.md`)
 3. Optionally run `/implement` for the fixes
 
 ## Completion Criteria

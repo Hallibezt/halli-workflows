@@ -92,7 +92,8 @@ After ALL tasks:
 
 ### Doc Sync (NON-NEGOTIABLE)
 - [ ] Update `docs/plans/product-roadmap.md` — check off completed items
-- [ ] Update `docs/plans/backlog.md` — mark resolved items
+- [ ] Update `docs/plans/backlog.md` — mark resolved items per `halli-workflows:backlog-conventions`
+      (transition status to DONE (YYYY-MM-DD); do NOT reshape existing items)
 - [ ] Check off task file acceptance criteria
 - [ ] Update CLAUDE.md "Current State" if significant
 

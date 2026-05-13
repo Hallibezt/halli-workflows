@@ -139,9 +139,9 @@ prompt: |
   Ambition: [MVP/Production/Enterprise]
 
   Create:
-  1. CLAUDE.md (engineering bible with context router — INCLUDING Rule 14 if DB-backed)
+  1. CLAUDE.md (engineering bible with context router — INCLUDING Rule 14 if DB-backed; reference `halli-workflows:backlog-conventions`)
   2. docs/plans/product-roadmap.md (phases from features)
-  3. docs/plans/backlog.md (initial items)
+  3. docs/plans/backlog.md (initial items — MUST follow `halli-workflows:backlog-conventions`)
   4. docs/plans/build-testing.md (empty template)
   5. docs/infrastructure.md (from infra plan)
   6. docs/prd/[project]-prd.md (from brainstorm)

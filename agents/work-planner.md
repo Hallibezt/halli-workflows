@@ -144,21 +144,18 @@ Status: TODO
 - [ ] [what to test]
 ```
 
-## Backlog Status Format (MANDATORY)
+## Backlog Conventions (MANDATORY)
 
-When creating or updating backlog entries, use exactly these status values:
+Backlog entries follow the canonical shape, status values, and length limits
+defined in `halli-workflows:backlog-conventions`. Read that skill before writing
+or updating `backlog.md`. Key points for this agent:
 
-```
-TODO | IN PROGRESS | IN REVIEW | DONE (date)
-```
+- Status values: `TODO | IN PROGRESS | IN REVIEW | DONE (YYYY-MM-DD) | BLOCKED (reason) | WONTFIX (reason) | DEPRECATED (reason)`
+- Item shape: table-row OR single-bullet (≤3 lines)
+- If an item needs >3 lines: extract to `docs/design/<name>.md`, leave a pointer
+- No emoji, no strikethrough, no free-text statuses
 
-- **TODO** — not started
-- **IN PROGRESS** — implement command is actively working on this
-- **IN REVIEW** — implemented, waiting for user to manually verify
-- **DONE (date)** — user confirmed it works, with ISO date
-
-No emoji, no strikethrough, no other formats. This is machine-readable and the
-implement command parses it to track progress.
+Full spec in the skill.
 
 ## Output
 
