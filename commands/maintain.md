@@ -43,6 +43,21 @@ Available audit domains:
 
 If the project has no `scripts/drift-check.ts` or no database, skip this step and note "no drift gate" in the report. (Consider suggesting the user install it via /kickoff re-bootstrap — schema drift is one of the top 3 silent failure modes.)
 
+### Step 2b: Supabase RLS performance scan (if project uses Supabase)
+
+If `supabase/migrations/` exists, run the `auth_rls_initplan` scan from the
+`supabase-rls-performance` skill:
+
+```bash
+grep -rEn 'auth\.(uid|role|jwt|email)\(\)' supabase/migrations/ \
+  | grep -v 'select auth\.' | grep -v 'SELECT auth\.' \
+  | wc -l
+```
+
+Any count > 0 is a finding — surface as **High** priority. The fix is the
+sweep-migration template in `supabase-rls-performance` skill. Suggest the
+user invoke it as a single migration after the maintain report.
+
 ### Step 2: Pre-Audit Context
 
 Before invoking the auditor, gather context:

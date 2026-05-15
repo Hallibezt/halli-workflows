@@ -1,7 +1,7 @@
 {
   "name": "halli-workflows",
-  "version": "1.6.0",
-  "description": "Full-lifecycle development workflows — from project kickoff and brainstorming through design, implementation, and ongoing maintenance. 37 specialized agents, 19 skills, stack-aware presets. v1.4 wired the pilot-review orchestrator end-to-end. v1.5 added 2 UX reviewer agents (guest-ux-reviewer, owner-ux-reviewer) with Laws of UX heuristic rubrics. v1.6 adds Rule 15 enforcement — code-debt-reviewer agent + code-debt-registry skill close the agentic 'hopeful comments' anti-pattern that shipped the GuestPad reset-and-unlink bug (2026-05-10).",
+  "version": "1.7.0",
+  "description": "Full-lifecycle development workflows — from project kickoff and brainstorming through design, implementation, and ongoing maintenance. 37 specialized agents, 20 skills, stack-aware presets. v1.4 wired the pilot-review orchestrator end-to-end. v1.5 added 2 UX reviewer agents (guest-ux-reviewer, owner-ux-reviewer) with Laws of UX heuristic rubrics. v1.6 adds Rule 15 enforcement — code-debt-reviewer agent + code-debt-registry skill close the agentic 'hopeful comments' anti-pattern that shipped the GuestPad reset-and-unlink bug (2026-05-10). v1.7 adds the supabase-rls-performance skill — bakes the auth.uid()/role()/jwt()/email() wrapping rule into every new Supabase project at /kickoff time and lets /audit + /maintain catch the auth_rls_initplan pitfall in existing ones.",
   "author": {
     "name": "Halli"
   },
@@ -20,7 +20,9 @@
     "api",
     "pilot-review",
     "ux-review",
-    "code-debt-registry"
+    "code-debt-registry",
+    "supabase",
+    "rls"
   ],
   "commands": [
     "./commands/kickoff.md",

@@ -139,7 +139,7 @@ prompt: |
   Ambition: [MVP/Production/Enterprise]
 
   Create:
-  1. CLAUDE.md (engineering bible with context router — INCLUDING Rule 14 if DB-backed; reference `halli-workflows:backlog-conventions`)
+  1. CLAUDE.md (engineering bible with context router — INCLUDING Rule 14 if DB-backed, INCLUDING Rule 16 if Supabase RLS is in the stack; reference `halli-workflows:backlog-conventions` + `halli-workflows:supabase-rls-performance` (when applicable))
   2. docs/plans/product-roadmap.md (phases from features)
   3. docs/plans/backlog.md (initial items — MUST follow `halli-workflows:backlog-conventions`)
   4. docs/plans/build-testing.md (empty template)

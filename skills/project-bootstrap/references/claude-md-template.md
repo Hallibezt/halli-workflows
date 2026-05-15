@@ -44,6 +44,32 @@
 ### Rule 2: {{RULE_2_TITLE}}
 {{RULE_2_DESCRIPTION}}
 
+### Rule 16: RLS auth calls must be wrapped in `(SELECT ...)` (NON-NEGOTIABLE — include if project uses Supabase RLS)
+
+> `auth.uid()` is volatile — Postgres re-evaluates it per row. `(SELECT auth.uid())` is an initplan — evaluated once per query. Supabase's performance advisor flags the bare form as `auth_rls_initplan`. On a query that returns 10k rows the bare form fires 10k auth calls; the wrapped form fires 1.
+
+Every `auth.uid()`, `auth.role()`, `auth.jwt()`, and `auth.email()` reference inside an RLS policy (USING, WITH CHECK, or in any subquery they call) MUST be wrapped in a scalar subquery `(SELECT auth.<fn>())`.
+
+**Wrong** (per-row volatile, flagged by `auth_rls_initplan`):
+```sql
+CREATE POLICY "owners_read"
+  ON properties FOR SELECT
+  USING (owner_id IN (SELECT id FROM owners WHERE supabase_auth_id = auth.uid()::text));
+```
+
+**Right** (initplan, one call per query):
+```sql
+CREATE POLICY "owners_read"
+  ON properties FOR SELECT
+  USING (owner_id IN (SELECT id FROM owners WHERE supabase_auth_id = (SELECT auth.uid())::text));
+```
+
+Applies equally to `auth.role()` / `auth.jwt()` / `auth.email()`. Does NOT apply to direct callers in API routes / Server Components (those run once per request) or inside `CREATE FUNCTION` bodies (function body runs once per call).
+
+**Self-check before any RLS migration commit**: `grep -E "auth\.(uid|role|jwt|email)\(\)" supabase/migrations/NNN_*.sql` — every match must be inside `(SELECT ...)`.
+
+Reference: <https://supabase.com/docs/guides/database/postgres/row-level-security#call-functions-with-select> · Full skill: `supabase-rls-performance`.
+
 ### Rule 14: Deployment Integrity Gate (NON-NEGOTIABLE — include if project has a database)
 
 > **Committing a migration file is not the same as applying it. Claude's word is not the same as the production state.**

@@ -28,6 +28,16 @@ description: Proven stack combinations with configuration templates, dependency 
 
 **Critical rule**: Prisma = schema + migrations ONLY. Supabase client = ALL runtime queries (respects RLS).
 
+**RLS performance**: When the project ships RLS policies, read the
+`supabase-rls-performance` skill before writing the first one. Bare
+`auth.uid()` / `auth.role()` / `auth.jwt()` / `auth.email()` calls inside an
+RLS policy are re-evaluated per row (volatile) and flagged by Supabase's
+performance advisor as `auth_rls_initplan`. The fix is mechanical — wrap
+each call in `(SELECT …)` — but it must be baked into the project's
+CLAUDE.md from day one, otherwise every new migration silently regresses.
+The skill includes the canonical rule text, the sweep-migration template
+for retrofitting existing projects, and the grep self-check.
+
 **Directory structure**:
 ```
 src/

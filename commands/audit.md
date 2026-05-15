@@ -41,6 +41,21 @@ The agent runs 7 audit phases:
 6. **Test Quality Audit** — mock mismatches, weak assertions, false confidence
 7. **Environment & Config Audit** — env var drift, hardcoded values
 
+**Supabase-specific extras** (only run if `supabase/migrations/` exists):
+
+```bash
+# Performance: bare auth.uid()/role()/jwt()/email() in RLS policies
+# (Supabase performance-advisor flag: auth_rls_initplan)
+grep -rEn 'auth\.(uid|role|jwt|email)\(\)' supabase/migrations/ \
+  | grep -v 'select auth\.' | grep -v 'SELECT auth\.' \
+  | wc -l
+```
+
+Any count > 0 is a finding — every bare call is re-evaluated per row by the
+Postgres planner and slows queries linearly with row count. The fix and
+sweep-migration template live in the `supabase-rls-performance` skill;
+surface this as a **High** priority finding when present.
+
 ### Step 3: Present Findings
 
 ```markdown
